@@ -1,0 +1,20 @@
+{
+  "projectId": "00000000-0000-0000-0000-000000000000",
+  "projectName": "joel-radix-app",
+  "workspaceSlug": "default-workspace",
+  "branch": "main",
+  "automatedProtection": true,
+  "notifications": {
+    "channel": "email",
+    "recipient": "Joelajim05@gmail.com"
+  },
+  "auditRules": {
+    "ignorePaths": [
+      "node_modules",
+      "dist",
+      ".git",
+      "coverage"
+    ],
+    "failSeverity": "critical"
+  }
+}
