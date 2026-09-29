@@ -1,6 +1,6 @@
 {
   "name": "radix-cli",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Radix Platform CLI - System diagnostics & automated audit engine",
   "main": "dist/index.js",
   "type": "module",
