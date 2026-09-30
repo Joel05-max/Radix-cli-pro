@@ -1,0 +1,23 @@
+# Development, backend, and test directories
+my-test/
+tests/
+backend/
+.github/
+node_modules/
+
+# Non-production source and config files
+*.ts
+tsconfig.json
+async-handler.js
+migration_add_indexes.sql
+.radixrc
+
+# Output reports and logs
+*.html
+radix.json
+*.env
+*.log
+
+# VCS files
+.git/
+.gitignore
