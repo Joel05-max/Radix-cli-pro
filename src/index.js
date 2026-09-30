@@ -4,6 +4,9 @@ import { Command } from 'commander';
 import chalk from 'chalk';
 import { askHandler } from './commands/ask.js';
 import { monitorHandler } from './commands/monitor.js';
+import { initHandler } from './commands/init.js';
+import { fixHandler } from './commands/fix.js';
+import { reportHandler } from './commands/report.js';
 
 const program = new Command();
 
@@ -32,31 +35,19 @@ program
   .command('fix')
   .description('Interactive auto-patch engine')
   .option('--dry-run', 'Preview patch diffs without modifying disk')
-  .action((options) => {
-    if (options.dryRun) {
-      console.log(chalk.bold.blue('\n🔍 Running dry-run mode. Generating patch preview...'));
-      console.log(chalk.dim('--- a/config.json\n+++ b/config.json\n@@ -1,3 +1,3 @@\n- "timeout": 30\n+ "timeout": 60'));
-    } else {
-      console.log(chalk.bold.green('\n🛠 Executing system fixes...'));
-    }
-  });
+  .action(fixHandler);
 
 // --- radix report ---
 program
   .command('report')
   .description('Generate executive audit report')
   .option('-o, --output <path>', 'Output file path', './radix-audit-report.html')
-  .action((options) => {
-    console.log(chalk.green(`\n📊 Executive report generated: ${options.output}\n`));
-  });
+  .action(reportHandler);
 
 // --- radix init ---
 program
   .command('init')
   .description('Initialize local .radixrc configuration')
-  .action(() => {
-    console.log(chalk.bold.cyan('\n⚙ Initializing Radix project configuration...'));
-    console.log(chalk.green('✔ Created .radixrc file successfully.\n'));
-  });
+  .action(initHandler);
 
 program.parse(process.argv);
