@@ -1,7 +1,8 @@
-# Development, backend, and test directories
+# Development, backend, and build artifacts
 my-test/
 tests/
 backend/
+dist/
 .github/
 node_modules/
 
