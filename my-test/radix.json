@@ -1,0 +1,20 @@
+{
+  "projectId": "SYS-77801-PRED",
+  "projectName": "Radix Predictive AI Core",
+  "workspaceSlug": "default-workspace",
+  "branch": "main",
+  "automatedProtection": true,
+  "notifications": {
+    "channel": "email",
+    "recipient": "joelajim05@gmail.com"
+  },
+  "auditRules": {
+    "ignorePaths": [
+      "node_modules",
+      "dist",
+      ".git",
+      "coverage"
+    ],
+    "failSeverity": "critical"
+  }
+}
