@@ -1,40 +1,53 @@
+import * as p from '@clack/prompts';
 import chalk from 'chalk';
-import { intro, outro, spinner } from '@clack/prompts';
-import { loadConfig } from '../utils/config.js';
 
-export async function askHandler(queryParts, options) {
-  const query = queryParts.join(' ');
-  const config = await loadConfig();
+export async function registerAskCommand(program) {
+  program
+    .command('ask')
+    .description('Interactive infrastructure assistant and query engine')
+    .argument('[query...]', 'Natural language infrastructure question')
+    .action(async (queryWords) => {
+      p.intro(chalk.bold.cyan('🤖 Radix AI & Infrastructure Assistant'));
 
-  if (!query) {
-    console.log(chalk.yellow('Please provide an infrastructure query. Example: radix ask "check disk space"'));
-    return;
-  }
+      let query = queryWords ? queryWords.join(' ') : '';
 
-  const providerName = (config.provider || 'openai').toUpperCase();
-  const modelName = config.model || 'gpt-4o';
+      if (!query) {
+        query = await p.text({
+          message: 'What infrastructure problem or task can I help you resolve?',
+          placeholder: 'e.g., How do I inspect failing pods in Kubernetes?',
+          validate(value) {
+            if (value.length === 0) return 'Please enter a valid question or command.';
+          },
+        });
+      }
 
-  if (options.json) {
-    console.log(JSON.stringify({
-      status: 'ok',
-      provider: config.provider,
-      model: config.model,
-      query,
-      response: `[${providerName} / ${modelName}] System health optimal. No critical anomalies detected.`
-    }));
-    return;
-  }
+      if (p.isCancel(query)) {
+        p.cancel('Query cancelled.');
+        return;
+      }
 
-  intro(chalk.bold.cyan(`Radix AI Diagnostics (${config.provider}:${config.model})`));
-  const s = spinner();
-  s.start('Analyzing infrastructure logs and metric history...');
-  
-  await new Promise((r) => setTimeout(r, 1000));
-  s.stop('Analysis complete.');
+      const s = p.spinner();
+      s.start('Analyzing query context...');
 
-  console.log(chalk.bold.green(`\n✔ Diagnosis (${config.model}):`));
-  console.log(chalk.white(`  Query: "${query}"`));
-  console.log(chalk.dim(`  Status: Operating within expected bounds. API key verified.\n`));
-  
-  outro('Complete.');
+      // Simulated context parsing engine for CLI infrastructure tasks
+      setTimeout(() => {
+        s.stop(chalk.green('✔ Context analyzed successfully.'));
+
+        console.log('\n' + chalk.bold.underline('Suggested Action Plan:'));
+        
+        const lower = query.toLowerCase();
+        if (lower.includes('docker') || lower.includes('container')) {
+          console.log(` • Run ${chalk.cyan('radix docker')} to perform engine & container health scans.`);
+          console.log(` • Run ${chalk.cyan('radix fix')} to purge dangling volumes and unused images.`);
+        } else if (lower.includes('k8s') || lower.includes('pod') || lower.includes('cluster') || lower.includes('kubernetes')) {
+          console.log(` • Run ${chalk.cyan('radix k8s')} to check failed/evicted cluster pods.`);
+          console.log(` • Run ${chalk.cyan('radix fix --auto')} to automatically clean failed states.`);
+        } else {
+          console.log(` • Run ${chalk.cyan('radix docker')} or ${chalk.cyan('radix k8s')} for targeted diagnostics.`);
+          console.log(` • Use ${chalk.cyan('radix fix')} to run auto-remediation routines.`);
+        }
+
+        p.outro(chalk.bold.green('Assistant session completed.'));
+      }, 600);
+    });
 }

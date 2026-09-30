@@ -4,6 +4,7 @@ import { Command } from 'commander';
 import { registerDockerCommand } from './commands/docker.js';
 import { registerK8sCommand } from './commands/k8s.js';
 import { registerFixCommand } from './commands/fix.js';
+import { registerAskCommand } from './commands/ask.js';
 
 const program = new Command();
 
@@ -12,9 +13,10 @@ program
   .description('Radix CLI Engine')
   .version('1.4.0');
 
-// Register diagnostic and remediation commands
+// Register diagnostic, remediation, and assistant commands
 registerDockerCommand(program);
 registerK8sCommand(program);
 registerFixCommand(program);
+registerAskCommand(program);
 
 program.parse(process.argv);
