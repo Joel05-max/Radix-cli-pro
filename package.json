@@ -3,7 +3,7 @@
   "version": "1.4.0",
   "type": "module",
   "bin": {
-    "radix": "./src/index.js"
+    "radix": "src/index.js"
   },
   "scripts": {
     "start": "node src/index.js",
