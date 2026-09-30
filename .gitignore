@@ -4,3 +4,4 @@ node_modules/
 *.html
 *.log
 .DS_Store
+radix-report.json
