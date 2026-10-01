@@ -1,11 +1,8 @@
-const DistributionService = require('../services/distribution');
-const fs = require('fs');
-const path = require('path');
+import DistributionService from '../services/distribution.js';
+import fs from 'fs';
+import path from 'path';
 
-/**
- * CLI Command Handler for Multi-Channel Distribution
- */
-async function notifyCommand(options) {
+export default async function notifyCommand(options) {
   const distribution = new DistributionService();
 
   let payload = {
@@ -15,7 +12,6 @@ async function notifyCommand(options) {
     details: []
   };
 
-  // If a report file is provided, load summary details
   if (options.report) {
     const reportPath = path.resolve(options.report);
     if (fs.existsSync(reportPath)) {
@@ -51,5 +47,3 @@ async function notifyCommand(options) {
     console.log('[Notify] No notifications were sent. Check your radix.json channels configuration.');
   }
 }
-
-module.exports = notifyCommand;
