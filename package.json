@@ -1,20 +1,12 @@
 {
-  "name": "@joel05-max/radix-cli",
-  "version": "1.4.0",
+  "name": "radix-cli",
+  "version": "1.0.0",
   "type": "module",
   "bin": {
-    "radix": "src/index.js"
+    "radix": "./src/index.js"
   },
   "scripts": {
-    "start": "node src/index.js",
-    "test": "vitest run"
-  },
-  "dependencies": {
-    "@clack/prompts": "^0.8.2",
-    "chalk": "^5.3.0",
-    "commander": "^12.1.0"
-  },
-  "devDependencies": {
-    "vitest": "^2.1.0"
+    "test": "node --test tests/*.test.js",
+    "start": "node src/index.js"
   }
 }
