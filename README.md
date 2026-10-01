@@ -1,5 +1,9 @@
 # Radix CLI
+# Radix CLI
 
+[![npm version](https://img.shields.io/npm/v/@joel05-max/radix-cli.svg)](https://www.npmjs.com/package/@joel05-max/radix-cli)
+[![npm downloads](https://img.shields.io/npm/dm/@joel05-max/radix-cli.svg)](https://www.npmjs.com/package/@joel05-max/radix-cli)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 Enterprise Infrastructure-as-Code (IaC) diagnostic, TUI monitoring, auto-remediation, and alert distribution engine built on modern ES Modules.
 
 ## Key Features
