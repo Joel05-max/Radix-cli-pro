@@ -1,28 +1,15 @@
-#!/usr/bin/env node
+const notifyCommand = require('./commands/notify');
 
-import { Command } from 'commander';
-import { registerDockerCommand } from './commands/docker.js';
-import { registerK8sCommand } from './commands/k8s.js';
-import { registerFixCommand } from './commands/fix.js';
-import { registerAskCommand } from './commands/ask.js';
-import { registerReportCommand } from './commands/report.js';
-import { registerMonitorCommand } from './commands/monitor.js';
-import { registerProviderCommand } from './commands/provider.js';
-
-const program = new Command();
+// ... existing CLI command definitions ...
 
 program
-  .name('radix')
-  .description('Radix CLI Engine')
-  .version('1.5.0');
-
-// Register all core diagnostic, monitoring, provider, remediation, and report commands
-registerDockerCommand(program);
-registerK8sCommand(program);
-registerFixCommand(program);
-registerAskCommand(program);
-registerReportCommand(program);
-registerMonitorCommand(program);
-registerProviderCommand(program);
-
-program.parse(process.argv);
+  .command('notify')
+  .description('Broadcast execution reports and remediation status across multi-channel webhooks')
+  .option('-c, --channel <channel>', 'Target channel (e.g., slack, msteams, webhook)')
+  .option('-m, --message <message>', 'Custom notification message body')
+  .option('-t, --title <title>', 'Notification header/title')
+  .option('-s, --severity <severity>', 'Severity level (INFO, WARNING, CRITICAL)', 'INFO')
+  .option('-r, --report <filepath>', 'Path to compliance snapshot or audit report JSON')
+  .action(async (options) => {
+    await notifyCommand(options);
+  });
