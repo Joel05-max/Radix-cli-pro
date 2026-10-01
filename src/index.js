@@ -7,6 +7,7 @@ import { registerFixCommand } from './commands/fix.js';
 import { registerAskCommand } from './commands/ask.js';
 import { registerReportCommand } from './commands/report.js';
 import { registerMonitorCommand } from './commands/monitor.js';
+import { registerProviderCommand } from './commands/provider.js';
 
 const program = new Command();
 
@@ -15,12 +16,13 @@ program
   .description('Radix CLI Engine')
   .version('1.5.0');
 
-// Register all core diagnostic, monitoring, remediation, and report commands
+// Register all core diagnostic, monitoring, provider, remediation, and report commands
 registerDockerCommand(program);
 registerK8sCommand(program);
 registerFixCommand(program);
 registerAskCommand(program);
 registerReportCommand(program);
 registerMonitorCommand(program);
+registerProviderCommand(program);
 
 program.parse(process.argv);

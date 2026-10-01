@@ -1,0 +1,18 @@
+{
+  "timestamp": "2026-09-30T23:40:57.051Z",
+  "system": {
+    "platform": "android",
+    "arch": "arm64",
+    "cpus": 0,
+    "totalMemMB": 3646,
+    "freeMemMB": 1054
+  },
+  "services": {
+    "docker": {
+      "status": "unreachable"
+    },
+    "k8s": {
+      "status": "unreachable"
+    }
+  }
+}
