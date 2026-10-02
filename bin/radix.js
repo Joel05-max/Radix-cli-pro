@@ -18,7 +18,6 @@ program
   .option('--json', 'Output results as JSON')
   .action(auditCommand);
 
-// Register ask command via Commander registration function
 registerAskCommand(program);
 
 program
