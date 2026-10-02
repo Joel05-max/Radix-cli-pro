@@ -1,39 +1,54 @@
 #!/usr/bin/env node
 
-import { Command } from 'commander';
-import { auditCommand } from '../src/commands/audit.js';
-import { registerAskCommand } from '../src/commands/ask.js';
-import { fixCommand } from '../src/commands/fix.js';
+import { runAudit } from '../src/index.js';
 import { startDashboardServer } from '../src/server.js';
+import { runFix } from '../src/fix.js';
+import { initCommand } from '../src/commands/init.js';
 
-const program = new Command();
+const args = process.argv.slice(2);
+const command = args[0];
 
-program
-  .name('radix')
-  .description('Radix Workspace Diagnostic Engine')
-  .version('1.0.0');
+if (!command || command === '--help' || command === '-h') {
+  console.log(`
+Radix CLI Pro - Modular Diagnostic & Remediation Engine (v2.1.0)
 
-program
-  .command('audit')
-  .description('Run live diagnostics against the current workspace')
-  .option('--json', 'Output results as JSON')
-  .action(auditCommand);
+Usage:
+  radix <command> [options]
 
-registerAskCommand(program);
+Commands:
+  audit          Run workspace health checks and dynamic plugins
+  init           Scaffold a standard radix.config.js plugin config
+  fix [--auto]   Execute remediation strategies (interactive or automated)
+  ask <query>    Query AI diagnostics for technical recommendations
+  ui             Start real-time SSE web telemetry dashboard (Port 3000)
 
-program
-  .command('fix')
-  .description('Execute automated remediation playbooks')
-  .option('--auto', 'Run automatically without interactive confirmations')
-  .option('--docker', 'Include dangling Docker cleanup')
-  .action(fixCommand);
+Options:
+  -v, --version  Show current version
+  -h, --help     Display help manual
+  `);
+  process.exit(0);
+}
 
-program
-  .command('ui')
-  .description('Start the Web Dashboard UI server')
-  .option('-p, --port <number>', 'Port to listen on', '3000')
-  .action((options) => {
-    startDashboardServer(parseInt(options.port, 10));
-  });
+if (command === '-v' || command === '--version') {
+  console.log('Radix CLI Pro v2.1.0');
+  process.exit(0);
+}
 
-program.parse(process.argv);
+switch (command) {
+  case 'init':
+    await initCommand();
+    break;
+  case 'audit':
+    await runAudit();
+    break;
+  case 'fix':
+    await runFix(args.includes('--auto'));
+    break;
+  case 'ui':
+    startDashboardServer(3000);
+    console.log('🚀 Radix Dashboard listening at http://localhost:3000');
+    break;
+  default:
+    console.error(`Unknown command: ${command}. Run "radix --help" for usage.`);
+    process.exit(1);
+}
