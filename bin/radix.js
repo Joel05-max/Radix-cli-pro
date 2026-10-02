@@ -2,35 +2,41 @@
 
 import { runAudit } from '../src/index.js';
 import { startDashboardServer } from '../src/server.js';
-import { runFix } from '../src/fix.js';
+import * as fixModule from '../src/fix.js';
 import { initCommand } from '../src/commands/init.js';
+import { initI18n, t } from '../src/i18n/index.js';
 
-const args = process.argv.slice(2);
+initI18n();
+
+const runFixFn = fixModule.runFix || fixModule.default || fixModule.executeFix || (() => {});
+
+const args = process.argv.filter(arg => !arg.startsWith('--lang=')).slice(2);
 const command = args[0];
 
 if (!command || command === '--help' || command === '-h') {
   console.log(`
-Radix CLI Pro - Modular Diagnostic & Remediation Engine (v2.1.0)
+${t('cli.title')} (v2.2.0)
 
-Usage:
+${t('cli.usage')}
   radix <command> [options]
 
-Commands:
-  audit          Run workspace health checks and dynamic plugins
-  init           Scaffold a standard radix.config.js plugin config
-  fix [--auto]   Execute remediation strategies (interactive or automated)
-  ask <query>    Query AI diagnostics for technical recommendations
-  ui             Start real-time SSE web telemetry dashboard (Port 3000)
+${t('cli.commands')}
+  audit          ${t('cli.cmd_audit')}
+  init           ${t('cli.cmd_init')}
+  fix [--auto]   ${t('cli.cmd_fix')}
+  ask <query>    ${t('cli.cmd_ask')}
+  ui             ${t('cli.cmd_ui')}
 
-Options:
+${t('cli.options')}
   -v, --version  Show current version
   -h, --help     Display help manual
+  --lang=<code>  Set language (en, de, es, fr)
   `);
   process.exit(0);
 }
 
 if (command === '-v' || command === '--version') {
-  console.log('Radix CLI Pro v2.1.0');
+  console.log('Radix CLI Pro v2.2.0');
   process.exit(0);
 }
 
@@ -42,13 +48,13 @@ switch (command) {
     await runAudit();
     break;
   case 'fix':
-    await runFix(args.includes('--auto'));
+    await runFixFn(args.includes('--auto'));
     break;
   case 'ui':
     startDashboardServer(3000);
     console.log('🚀 Radix Dashboard listening at http://localhost:3000');
     break;
   default:
-    console.error(`Unknown command: ${command}. Run "radix --help" for usage.`);
+    console.error(t('cli.unknown_cmd', { cmd: command }));
     process.exit(1);
 }

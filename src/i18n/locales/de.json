@@ -1,0 +1,18 @@
+{
+  "cli": {
+    "title": "Radix CLI Pro - Modulare Diagnose- und Behebungs-Engine",
+    "usage": "Verwendung:",
+    "commands": "Befehle:",
+    "options": "Optionen:",
+    "cmd_audit": "Führen Sie Arbeitsbereichs-Gesundheitsprüfungen und dynamische Plugins aus",
+    "cmd_init": "Erstellen Sie eine radix.config.js-Vorlage",
+    "cmd_fix": "Führen Sie Behebungsstrategien aus (interaktiv oder automatisiert)",
+    "cmd_ask": "Fragen Sie die KI-Diagnose nach technischen Empfehlungen",
+    "cmd_ui": "Starten Sie das Echtzeit-SSE-Web-Telemetry-Dashboard (Port 3000)",
+    "unknown_cmd": "Unbekannter Befehl: {cmd}. Führen Sie 'radix --help' aus."
+  },
+  "init": {
+    "exists": "⚠️ radix.config.js existiert bereits in diesem Arbeitsbereich.",
+    "success": "✨ radix.config.js mit Standard-Diagnosevorlagen initialisiert."
+  }
+}

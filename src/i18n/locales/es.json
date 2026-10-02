@@ -1,0 +1,18 @@
+{
+  "cli": {
+    "title": "Radix CLI Pro - Motor modular de diagnóstico y remediación",
+    "usage": "Uso:",
+    "commands": "Comandos:",
+    "options": "Opciones:",
+    "cmd_audit": "Ejecutar verificaciones de salud y plugins dinámicos",
+    "cmd_init": "Crear plantilla de configuración radix.config.js",
+    "cmd_fix": "Ejecutar estrategias de remediación (interactivo o automatizado)",
+    "cmd_ask": "Consultar diagnósticos de IA para recomendaciones técnicas",
+    "cmd_ui": "Iniciar panel web de telemetría SSE en tiempo real (Puerto 3000)",
+    "unknown_cmd": "Comando desconocido: {cmd}. Ejecute 'radix --help'."
+  },
+  "init": {
+    "exists": "⚠️ radix.config.js ya existe en este espacio de trabajo.",
+    "success": "✨ Se inicializó radix.config.js con plantillas estándar."
+  }
+}
