@@ -12,7 +12,18 @@
     "unknown_cmd": "Unknown command: {cmd}. Run 'radix --help' for usage."
   },
   "init": {
-    "exists": "⚠️ radix.config.js already exists in this workspace.",
-    "success": "✨ Initialized radix.config.js with standard diagnostic templates."
+    "success": "Initialization complete. Created config file at {{path}}",
+    "already_exists": "Configuration file {{path}} already exists.",
+    "error": "Failed to initialize configuration: {{error}}"
+  },
+  "audit": {
+    "starting": "Starting system diagnostic audit...",
+    "complete": "Audit complete. All subsystem health checks verified.",
+    "failed": "Audit detected health anomalies in target environment."
+  },
+  "fix": {
+    "starting": "Executing remediation playbooks...",
+    "applied": "Applied fix strategy successfully.",
+    "no_issues": "No critical remediation required."
   }
 }

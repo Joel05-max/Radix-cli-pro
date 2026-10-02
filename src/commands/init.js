@@ -1,38 +1,29 @@
-import fs from 'node:fs';
+import fs from 'node:fs/promises';
 import path from 'node:path';
+import { t } from '../i18n/index.js';
 
-export async function initCommand(cwd = process.cwd()) {
-  const configPath = path.join(cwd, 'radix.config.js');
+export async function initCommand() {
+  const configPath = path.join(process.cwd(), 'radix.json');
 
-  if (fs.existsSync(configPath)) {
-    console.log('⚠️ radix.config.js already exists in this workspace.');
-    return;
-  }
-
-  const template = `export default {
-  rules: [
-    {
-      name: 'security-env-check',
-      check: async () => {
-        return {
-          passed: true,
-          message: 'No unencrypted secrets found in workspace environment.'
-        };
-      }
-    },
-    {
-      name: 'git-status-check',
-      check: async () => {
-        return {
-          passed: true,
-          message: 'Working tree clean and synchronized.'
-        };
-      }
+  const defaultConfig = {
+    version: "2.2.0",
+    language: "auto",
+    channels: [],
+    rules: {
+      docker: true,
+      k8s: true,
+      monitoring: true
     }
-  ]
-};
-`;
+  };
 
-  fs.writeFileSync(configPath, template, 'utf8');
-  console.log('✨ Initialized radix.config.js with standard diagnostic templates.');
+  try {
+    await fs.writeFile(configPath, JSON.stringify(defaultConfig, null, 2), { flag: 'wx' });
+    console.log(`✅ ${t('init.success', { path: 'radix.json' })}`);
+  } catch (err) {
+    if (err.code === 'EEXIST') {
+      console.log(`⚠️  ${t('init.already_exists', { path: 'radix.json' })}`);
+    } else {
+      console.error(`❌ ${t('init.error', { error: err.message })}`);
+    }
+  }
 }
