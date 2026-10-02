@@ -2,9 +2,11 @@ import test from 'node:test';
 import assert from 'node:assert';
 import { runAudit } from '../src/index.js';
 import { runFix } from '../src/fix.js';
-import { setLocale } from '../src/i18n/index.js';
+import { setLocale, initI18n } from '../src/i18n/index.js';
 
 test('commands module - multi-language integration checks', async (t) => {
+  await initI18n();
+
   await t.test('audit command executes and returns localized structure', async () => {
     setLocale('de');
     const auditRes = await runAudit();
