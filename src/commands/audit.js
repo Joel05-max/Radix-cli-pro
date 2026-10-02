@@ -17,17 +17,19 @@ export async function runAudit(options = {}) {
     workspace: targetDir,
     checks: {
       packageJson: { status: 'PASS', message: '' },
+      dependencies: { status: 'PASS', message: '', total: 0, outdated: [] },
       environment: { status: 'PASS', message: '', leaksDetected: false },
       gitRepository: { status: 'PASS', message: '', isClean: true }
     },
-    summary: { totalChecks: 3, passed: 0, warnings: 0, failed: 0 }
+    summary: { totalChecks: 4, passed: 0, warnings: 0, failed: 0 }
   };
 
   // 1. Check package.json presence & structure
+  let pkgData = null;
   try {
     const pkgPath = path.join(targetDir, 'package.json');
     const pkgRaw = await fs.readFile(pkgPath, 'utf8');
-    JSON.parse(pkgRaw);
+    pkgData = JSON.parse(pkgRaw);
     auditResult.checks.packageJson.message = 'Valid package.json present';
     auditResult.summary.passed += 1;
   } catch (err) {
@@ -37,7 +39,30 @@ export async function runAudit(options = {}) {
     auditResult.score -= 40;
   }
 
-  // 2. Scan for committed secret/env leaks
+  // 2. Scan Dependencies & Lockfile
+  if (pkgData) {
+    const deps = { ...pkgData.dependencies, ...pkgData.devDependencies };
+    const depCount = Object.keys(deps).length;
+    auditResult.checks.dependencies.total = depCount;
+
+    try {
+      const lockPath = path.join(targetDir, 'package-lock.json');
+      await fs.access(lockPath);
+      auditResult.checks.dependencies.message = `${depCount} dependencies analyzed. package-lock.json verified.`;
+      auditResult.summary.passed += 1;
+    } catch {
+      auditResult.checks.dependencies.status = 'WARN';
+      auditResult.checks.dependencies.message = `${depCount} dependencies analyzed, but missing package-lock.json`;
+      auditResult.summary.warnings += 1;
+      auditResult.score -= 10;
+    }
+  } else {
+    auditResult.checks.dependencies.status = 'FAIL';
+    auditResult.checks.dependencies.message = 'Skipped: package.json missing';
+    auditResult.summary.failed += 1;
+  }
+
+  // 3. Scan for committed secret/env leaks
   try {
     const files = await fs.readdir(targetDir);
     const suspiciousEnvs = files.filter(f => f.startsWith('.env') && f !== '.env.example');
@@ -57,7 +82,7 @@ export async function runAudit(options = {}) {
     auditResult.summary.warnings += 1;
   }
 
-  // 3. Inspect git status
+  // 4. Inspect git status
   try {
     const gitStatus = execSync('git status --porcelain', { cwd: targetDir, stdio: ['pipe', 'pipe', 'ignore'] }).toString();
     if (gitStatus.trim().length > 0) {
@@ -104,6 +129,6 @@ export async function auditCommand(options = {}) {
   console.log(`Health Score: ${result.score}% [${result.status}]`);
   console.log(`Checks:      ${result.summary.passed} Passed, ${result.summary.warnings} Warnings, ${result.summary.failed} Failed`);
   console.log(`Execution:   ${result.durationMs}ms\n`);
-  
+
   return result;
 }
