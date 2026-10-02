@@ -1,10 +1,12 @@
+kcat << 'EOF' > bin/radix.js
 #!/usr/bin/env node
 
 import { runAudit } from '../src/index.js';
 import { startDashboardServer } from '../src/server.js';
 import * as fixModule from '../src/fix.js';
+import { askAI } from '../src/ask.js';
 import { initCommand } from '../src/commands/init.js';
-import { initI18n, t } from '../src/i18n/index.js';
+import { initI18n, t, getActiveLocale } from '../src/i18n/index.js';
 
 initI18n();
 
@@ -50,6 +52,12 @@ switch (command) {
   case 'fix':
     await runFixFn(args.includes('--auto'));
     break;
+  case 'ask': {
+    const query = args.slice(1).join(' ');
+    const result = await askAI(query, { lang: getActiveLocale() });
+    console.log(result.answer || result.error);
+    break;
+  }
   case 'ui':
     startDashboardServer(3000);
     console.log('🚀 Radix Dashboard listening at http://localhost:3000');
@@ -58,3 +66,4 @@ switch (command) {
     console.error(t('cli.unknown_cmd', { cmd: command }));
     process.exit(1);
 }
+EOF
