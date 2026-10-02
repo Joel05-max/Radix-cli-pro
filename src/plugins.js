@@ -1,5 +1,6 @@
 import fs from 'node:fs';
 import path from 'node:path';
+import { pathToFileURL } from 'node:url';
 
 export async function loadCustomPlugins(cwd = process.cwd()) {
   const customRules = [];
@@ -7,7 +8,8 @@ export async function loadCustomPlugins(cwd = process.cwd()) {
 
   if (fs.existsSync(configPath)) {
     try {
-      const userConfig = await import(`file://${configPath}`);
+      const configUrl = pathToFileURL(configPath).href;
+      const userConfig = await import(configUrl);
       if (Array.isArray(userConfig.default?.rules)) {
         customRules.push(...userConfig.default.rules);
       }
