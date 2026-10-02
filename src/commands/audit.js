@@ -19,9 +19,10 @@ export async function runAudit(options = {}) {
       packageJson: { status: 'PASS', message: '' },
       dependencies: { status: 'PASS', message: '', total: 0, outdated: [] },
       environment: { status: 'PASS', message: '', leaksDetected: false },
+      gitignore: { status: 'PASS', message: '' },
       gitRepository: { status: 'PASS', message: '', isClean: true }
     },
-    summary: { totalChecks: 4, passed: 0, warnings: 0, failed: 0 }
+    summary: { totalChecks: 5, passed: 0, warnings: 0, failed: 0 }
   };
 
   // 1. Check package.json presence & structure
@@ -82,7 +83,32 @@ export async function runAudit(options = {}) {
     auditResult.summary.warnings += 1;
   }
 
-  // 4. Inspect git status
+  // 4. Check .gitignore integrity
+  try {
+    const gitignorePath = path.join(targetDir, '.gitignore');
+    const gitignoreRaw = await fs.readFile(gitignorePath, 'utf8');
+    
+    const missingRules = [];
+    if (!gitignoreRaw.includes('node_modules')) missingRules.push('node_modules');
+    if (!gitignoreRaw.includes('.env')) missingRules.push('.env');
+
+    if (missingRules.length > 0) {
+      auditResult.checks.gitignore.status = 'WARN';
+      auditResult.checks.gitignore.message = `.gitignore exists but missing standard rules: ${missingRules.join(', ')}`;
+      auditResult.summary.warnings += 1;
+      auditResult.score -= 10;
+    } else {
+      auditResult.checks.gitignore.message = 'Valid .gitignore found with essential rules (node_modules, .env)';
+      auditResult.summary.passed += 1;
+    }
+  } catch {
+    auditResult.checks.gitignore.status = 'WARN';
+    auditResult.checks.gitignore.message = 'Missing .gitignore file in workspace root';
+    auditResult.summary.warnings += 1;
+    auditResult.score -= 15;
+  }
+
+  // 5. Inspect git status
   try {
     const gitStatus = execSync('git status --porcelain', { cwd: targetDir, stdio: ['pipe', 'pipe', 'ignore'] }).toString();
     if (gitStatus.trim().length > 0) {
