@@ -27,4 +27,6 @@ export async function runAudit() {
     summary: { total, passed, warnings, failed },
     checks
   };
-}export { runAudit, auditCommand } from './commands/audit.js';
+}
+
+export { auditCommand } from './commands/audit.js';
