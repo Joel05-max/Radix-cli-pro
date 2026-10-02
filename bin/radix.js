@@ -3,6 +3,7 @@
 import { Command } from 'commander';
 import { auditCommand } from '../src/commands/audit.js';
 import { registerAskCommand } from '../src/commands/ask.js';
+import { fixCommand } from '../src/commands/fix.js';
 import { startDashboardServer } from '../src/server.js';
 
 const program = new Command();
@@ -19,6 +20,13 @@ program
   .action(auditCommand);
 
 registerAskCommand(program);
+
+program
+  .command('fix')
+  .description('Execute automated remediation playbooks')
+  .option('--auto', 'Run automatically without interactive confirmations')
+  .option('--docker', 'Include dangling Docker cleanup')
+  .action(fixCommand);
 
 program
   .command('ui')
