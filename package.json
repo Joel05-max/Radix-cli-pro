@@ -1,9 +1,10 @@
 {
   "name": "radix-cli",
-  "version": "1.0.0",
+  "version": "2.2.0",
   "type": "module",
   "bin": {
-    "radix": "./bin/radix.js"
+    "radix": "./bin/radix.js",
+    "radix-cli": "./bin/radix.js"
   },
   "scripts": {
     "test": "node --test tests/*.test.js"
