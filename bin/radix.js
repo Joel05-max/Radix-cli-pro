@@ -2,6 +2,7 @@
 
 import { Command } from 'commander';
 import { auditCommand } from '../src/commands/audit.js';
+import { registerAskCommand } from '../src/commands/ask.js';
 import { startDashboardServer } from '../src/server.js';
 
 const program = new Command();
@@ -16,6 +17,9 @@ program
   .description('Run live diagnostics against the current workspace')
   .option('--json', 'Output results as JSON')
   .action(auditCommand);
+
+// Register ask command via Commander registration function
+registerAskCommand(program);
 
 program
   .command('ui')
